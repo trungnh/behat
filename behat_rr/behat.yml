@@ -1,0 +1,7 @@
+# behat.yml
+default:
+  context:
+      class: 'FeatureContext'
+      parameters:  
+        wd_host: 'http://127.0.0.1:4444/wd/hub'
+        wd_capabilities: { "browser": "chrome", "version": "32"}
