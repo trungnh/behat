@@ -154,9 +154,9 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Given /^I fill "([^"]*)" in "([^"]*)"$/
+     * @Given /^I fill "([^"]*)" to "([^"]*)"$/
      */
-    public function iFillIn($arg1, $arg2)
+    public function iFillTo($arg1, $arg2)
     {
         try{
             $page = $this->gui->getPage();
@@ -175,7 +175,7 @@ class FeatureContext extends BehatContext
             $_script = <<<JS
 var optionEvens = document.getElementsByClassName("option-even");
 for (i=0; i<optionEvens.length; i++){
-    if(optionEvens[i].textContent == "$arg1"){
+    if(optionEvens[i].textContent.trim() == "$arg1"){
         optionEvens[i].click();
     }
 }
@@ -210,6 +210,145 @@ JS;
         }catch(PendingException $e){
             throw $e;
         }
+    }
+
+    /**
+     * @Given /^I fill "([^"]*)" to "([^"]*)" field "([^"]*)"$/
+     */
+    public function iFillToField($arg1, $arg2, $arg3)
+    {
+        $this->iFillTo($arg1,$arg3);
+    }
+
+    /**
+     * @Given /^I select "([^"]*)" from "([^"]*)" field "([^"]*)"$/
+     */
+    public function iSelectFromField($arg1, $arg2, $arg3)
+    {
+        $this->iSelectFrom($arg1, $arg3);
+    }
+
+    /**
+     * @Given /^I check on "([^"]*)" field "([^"]*)"$/
+     */
+    public function iCheckOnField($arg1, $arg2)
+    {
+        $this->iCheckOn($arg2);
+    }
+
+    /**
+     * @Given /^I press on button "([^"]*)" field "([^"]*)"$/
+     */
+    public function iPressOnButtonField($arg1, $arg2)
+    {
+        $this->iPressOn($arg2);
+    }
+
+    /**
+     * @Given /^I fill phone "([^"]*)" to "([^"]*)" field$/
+     */
+    public function iFillPhoneToField($arg1, $arg2)
+    {
+        try{
+            $_script = <<<JS
+jQuery('.phone-group').find('li').each(function(){
+    var a = jQuery(this).find('label').text();
+    var b = a.split(':')[0].trim();
+    if(b == "$arg2"){
+        jQuery(this).find('input').val('$arg1');
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I fill "([^"]*)" to "([^"]*)" field$/
+     */
+    public function iFillToField2($arg1, $arg2)
+    {
+        try{
+            $_script = <<<JS
+jQuery('li').each(function(){
+    var a = jQuery(this).find('label').text();
+    var b = a.split('*')[0].trim();
+    if(b == "$arg2"){
+        jQuery(this).find('input').val('$arg1');
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I select "([^"]*)" from "([^"]*)" field$/
+     */
+    public function iSelectFromField2($arg1, $arg2)
+    {
+        try{
+            $_script = <<<JS
+var optionEvens = document.getElementsByClassName("option-even");
+for (i=0; i<optionEvens.length; i++){
+    if(optionEvens[i].textContent == "$arg1"){
+        optionEvens[i].click();
+    }
+}
+JS;
+            $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I check on "([^"]*)" field$/
+     */
+    public function iCheckOnField2($arg1)
+    {
+        try{
+            $_script = <<<JS
+jQuery('.check-fields').each(function(){
+    var a = jQuery(this).find('h3.sub-title').text();
+    var b = a.split('*')[0].trim();
+    if(b == "$arg1"){
+        jQuery(this).find('input[type=checkbox]').prop('checked', true);
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I select day "([^"]*)" from "([^"]*)" field$/
+     */
+    public function iSelectDayFromField($arg1, $arg2)
+    {
+        $this->iSelectFrom($arg1,$arg2);
+    }
+
+    /**
+     * @Given /^I select month "([^"]*)" from "([^"]*)" field$/
+     */
+    public function iSelectMonthFromField($arg1, $arg2)
+    {
+        $this->iSelectFrom($arg1,$arg2);
+    }
+
+    /**
+     * @Given /^I select year "([^"]*)" from "([^"]*)" field$/
+     */
+    public function iSelectYearFromField($arg1, $arg2)
+    {
+        $this->iSelectFrom($arg1,$arg2);
     }
 
     /**
