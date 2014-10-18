@@ -80,7 +80,7 @@ class FeatureContext extends BehatContext
         try{
             $page = $this->gui->getPage();
             $this->iAmOn($this->_base_url, 'document.getElementsByClassName("cart").length > 0');
-            $_categoryLinks = $page->findAll('css', '.level-top');
+            $_categoryLinks = $page->findAll('css', 'a.level-top');
             foreach($_categoryLinks as $_cat){
                 if(!is_object($_cat)) continue;
                 if(strtolower($_cat->getText()) == strtolower($arg1)){
@@ -123,16 +123,39 @@ class FeatureContext extends BehatContext
     }
 
     /**
+     * @Given /^I click Apply now button$/
+     */
+    public function iClickApplyNowButton()
+    {
+        try{
+            $_script = <<<JS
+jQuery("#customerInformationForm").click();
+JS;
+            $_script1 = <<<JS
+jQuery("#applicationFormTabsDescription").show();
+jQuery("#applicationFormTabs").show();
+jQuery("#customerInformationFormContainer").show();
+JS;
+            $this->gui->executeScript($_script);
+            $this->gui->wait(5000);
+            $this->gui->executeScript($_script1);
+            $this->gui->wait(1000);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
      * @Given /^I click on button has id "([^"]*)"$/
      */
     public function iClickOnButtonHasId($arg1)
     {
         try{
-            $page = $this->gui->getPage();
-            $_element = $page->find('css',$arg1);
-            if(!is_object($_element)) return false;
-            $_element->click();
-            $this->gui->wait(5000,'document.getElementsByClassName("footer-container").length > 0');
+            $_script = <<<JS
+jQuery("$arg1").click();
+JS;
+            $this->gui->executeScript($_script);
+            $this->gui->wait(5000);
         }catch(PendingException $e){
             throw $e;
         }
@@ -173,12 +196,14 @@ class FeatureContext extends BehatContext
     {
         try{
             $_script = <<<JS
-var optionEvens = document.getElementsByClassName("option-even");
-for (i=0; i<optionEvens.length; i++){
-    if(optionEvens[i].textContent.trim() == "$arg1"){
-        optionEvens[i].click();
+jQuery('.select-opener').click();
+jQuery('li').each(function(){
+    var a = jQuery(this).find('a span').text();
+    var b = a.trim();
+    if(b == "$arg2"){
+        jQuery(this).click();
     }
-}
+});
 JS;
             $this->gui->executeScript($_script);
         }catch(PendingException $e){
@@ -241,6 +266,7 @@ JS;
      */
     public function iPressOnButtonField($arg1, $arg2)
     {
+        $this->iWaitSeconds(2);
         $this->iPressOn($arg2);
     }
 
@@ -295,7 +321,7 @@ JS;
             $_script = <<<JS
 var optionEvens = document.getElementsByClassName("option-even");
 for (i=0; i<optionEvens.length; i++){
-    if(optionEvens[i].textContent == "$arg1"){
+    if(optionEvens[i].textContent.trim() == "$arg1"){
         optionEvens[i].click();
     }
 }
@@ -332,7 +358,7 @@ JS;
      */
     public function iSelectDayFromField($arg1, $arg2)
     {
-        $this->iSelectFrom($arg1,$arg2);
+        $this->iSelectFrom($arg2,$arg1);
     }
 
     /**
@@ -340,7 +366,7 @@ JS;
      */
     public function iSelectMonthFromField($arg1, $arg2)
     {
-        $this->iSelectFrom($arg1,$arg2);
+        $this->iSelectFrom($arg2,$arg1);
     }
 
     /**
@@ -348,7 +374,27 @@ JS;
      */
     public function iSelectYearFromField($arg1, $arg2)
     {
-        $this->iSelectFrom($arg1,$arg2);
+        $this->iSelectFrom($arg2,$arg1);
+    }
+
+    /**
+     * @Then /^I should see the text "([^"]*)" in "([^"]*)"$/
+     */
+    public function iShouldSeeTheText($arg1, $arg2)
+    {
+        try{
+            $page = $this->gui->getPage();
+            $text = $page->find('css', "$arg2");
+            if(!is_object($text)){assertTrue(false);}
+
+            if(strcmp($text->getText(), $arg1) == 0){
+                return true;
+            }
+            assertEquals($text->getText(), $arg1);
+            $this->gui->stop();
+        }catch(PendingException $e){
+            throw $e;
+        }
     }
 
     /**
