@@ -51,7 +51,7 @@ class FeatureContext extends BehatContext
 		try{
 			$this->gui->start();
 			$this->gui->visit($arg1);
-            $this->gui->wait(5000, $condition);
+            $this->gui->wait(10000, $condition);
 		}catch(PendingException $e){
 			throw $e;
 		}
@@ -79,7 +79,7 @@ class FeatureContext extends BehatContext
     {
         try{
             $page = $this->gui->getPage();
-            $this->iAmOn($this->_base_url, 'document.getElementsByClassName("cart").length > 0');
+            $this->iAmOn($this->_base_url, 'document.getElementsByClassName("level-top").length > 0');
             $_categoryLinks = $page->findAll('css', 'a.level-top');
             foreach($_categoryLinks as $_cat){
                 if(!is_object($_cat)) continue;
@@ -196,7 +196,7 @@ JS;
     {
         try{
             $_script = <<<JS
-jQuery('.select-opener').click();
+jQuery('.select-opener').parent().click();
 jQuery('li').each(function(){
     var a = jQuery(this).find('a span').text();
     var b = a.trim();
@@ -315,18 +315,115 @@ JS;
     /**
      * @Given /^I select "([^"]*)" from "([^"]*)" field$/
      */
-    public function iSelectFromField2($arg1, $arg2)
+    public function iSelectFromField2($value, $element)
     {
         try{
             $_script = <<<JS
-var optionEvens = document.getElementsByClassName("option-even");
-for (i=0; i<optionEvens.length; i++){
-    if(optionEvens[i].textContent.trim() == "$arg1"){
-        optionEvens[i].click();
+jQuery('.select-opener').parent().click();
+jQuery('li').each(function(){
+    var a = jQuery(this).find('a span').text();
+    var b = a.trim();
+    if(b == "$value"){
+        jQuery(this).click();
     }
-}
+});
 JS;
             $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I select "([^"]*)" from "([^"]*)" dropdown$/
+     */
+    public function iSelectFromDropdown($value, $element)
+    {
+        try{
+            $_script = <<<JS
+jQuery('label').each(function(){
+    var a = jQuery(this).text().split('*')[0];
+    var b = a.trim();
+    if(b == "$element"){
+        jQuery(this).next().find('select').val("$value");
+    }
+});
+JS;
+            $_script1 = <<<JS
+jQuery('.select-opener').parent().click();
+jQuery('li').each(function(){
+    var a = jQuery(this).find('a span').text();
+    var b = a.trim();
+    if(b == "$value"){
+        jQuery(this).click();
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+            $this->iWaitSeconds(1);
+            $this->gui->executeScript($_script1);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I select State "([^"]*)" dropdown$/
+     */
+    public function iSelectStateDropdown($value)
+    {
+        try{
+            $_script = <<<JS
+jQuery('option').filter(function(){
+    return jQuery(this).text().trim() == "$value";
+}).prop('selected', true);
+JS;
+            $_script1 = <<<JS
+jQuery('.select-opener').parent().click();
+jQuery('li').each(function(){
+    var a = jQuery(this).find('a span').text();
+    var b = a.trim();
+    if(b == "$value"){
+        jQuery(this).click();
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+            $this->iWaitSeconds(1);
+            $this->gui->executeScript($_script1);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I select "([^"]*)" from "([^"]*)" of "([^"]*)" field$/
+     */
+    public function iSelectFromOfField($value, $element, $arg3)
+    {
+        try{
+            $_script = <<<JS
+jQuery('label').each(function(){
+    var a = jQuery(this).text().split('*')[0];
+    var b = a.trim();
+    if(b == "$element"){
+        jQuery(this).next().find('select').val("$value");
+    }
+});
+JS;
+            $_script1 = <<<JS
+jQuery('.select-opener').parent().click();
+jQuery('li').each(function(){
+    var a = jQuery(this).find('a span').text();
+    var b = a.trim();
+    if(b == "$value"){
+        jQuery(this).click();
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+            $this->iWaitSeconds(1);
+            $this->gui->executeScript($_script1);
         }catch(PendingException $e){
             throw $e;
         }
