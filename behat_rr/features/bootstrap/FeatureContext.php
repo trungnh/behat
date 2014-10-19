@@ -32,7 +32,7 @@ class FeatureContext extends BehatContext
      *
      * @param array $parameters context parameters (set them up through behat.yml)
      */
-    private $_base_url = 'http://rr-aws-dev.playhousedigital.com/';
+    private $_base_url = 'https://www.radio-rentals.com.au/';
 
     public function __construct(array $parameters)
     {
@@ -266,7 +266,7 @@ JS;
      */
     public function iPressOnButtonField($arg1, $arg2)
     {
-        $this->iWaitSeconds(2);
+        sleep(10);
         $this->iPressOn($arg2);
     }
 
@@ -335,6 +335,29 @@ JS;
     }
 
     /**
+     * @Given /^I select "([^"]*)" from Marital dropdown$/
+     */
+    public function iSelectFromMaritalDropdown($value)
+    {
+        try{
+            $_script = <<<JS
+jQuery('#applicationForm_personalDetails-maritalStatus option').val("$value");
+JS;
+            $_script1 = <<<JS
+jQuery('.select-opener').parent().click();
+jQuery('li').filter(function(){
+    return jQuery(this).find('a span').text().trim() == "$value";
+}).click();
+JS;
+            $this->gui->executeScript($_script);
+            $this->iWaitSeconds(1);
+            $this->gui->executeScript($_script1);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
      * @Given /^I select "([^"]*)" from "([^"]*)" dropdown$/
      */
     public function iSelectFromDropdown($value, $element)
@@ -380,13 +403,9 @@ jQuery('option').filter(function(){
 JS;
             $_script1 = <<<JS
 jQuery('.select-opener').parent().click();
-jQuery('li').each(function(){
-    var a = jQuery(this).find('a span').text();
-    var b = a.trim();
-    if(b == "$value"){
-        jQuery(this).click();
-    }
-});
+jQuery('label').filter(function(){
+    return jQuery(this).find('a span').text().trim() == "State*:";
+}).next().find('.center').html("Victoria");
 JS;
             $this->gui->executeScript($_script);
             $this->iWaitSeconds(1);
@@ -455,6 +474,10 @@ JS;
      */
     public function iSelectDayFromField($arg1, $arg2)
     {
+        $_script = <<<JS
+jQuery('#applicationForm_customerInformation_dob_day0').val("$arg1");
+JS;
+        $this->gui->executeScript($_script);
         $this->iSelectFrom($arg2,$arg1);
     }
 
@@ -463,6 +486,12 @@ JS;
      */
     public function iSelectMonthFromField($arg1, $arg2)
     {
+        $_script = <<<JS
+jQuery('#applicationForm_customerInformation_dob_month0 option').filter(function(){
+return jQuery(this).text().trim() == "$arg1";
+}).prop('selected', true);
+JS;
+        $this->gui->executeScript($_script);
         $this->iSelectFrom($arg2,$arg1);
     }
 
@@ -471,6 +500,10 @@ JS;
      */
     public function iSelectYearFromField($arg1, $arg2)
     {
+        $_script = <<<JS
+jQuery('#applicationForm_customerInformation_dob_year0').val("$arg1");
+JS;
+        $this->gui->executeScript($_script);
         $this->iSelectFrom($arg2,$arg1);
     }
 
@@ -510,12 +543,63 @@ JS;
     }
 
     /**
+     * @Given /^I choose Status "([^"]*)"$/
+     */
+    public function iChooseStatus($value)
+    {
+        $_script = <<<JS
+jQuery('input[type="radio"]').filter(function(){
+    return jQuery(this).parent().text().trim() == "$value";
+}).prop('checked', true).click();
+JS;
+        $this->gui->executeScript($_script);
+    }
+
+    /**
+     * @Given /^I select Occupation "([^"]*)"$/
+     */
+    public function iSelectOccupation($value)
+    {
+        $_script = <<<JS
+jQuery('option').filter(function(){
+    return jQuery(this).text().trim() == "$value";
+}).prop('selected', true);
+JS;
+        $_script1 = <<<JS
+jQuery('li').filter(function(){
+    return jQuery(this).find('a span').text().trim() == "$value";
+}).click();
+JS;
+        $this->gui->executeScript($_script);
+        $this->gui->executeScript($_script1);
+    }
+
+    /**
+     * @Given /^I select Expiry date "([^"]*)" value "([^"]*)"$/
+     */
+    public function iSelectExpiryDateValue($element, $value)
+    {
+        $_script = <<<JS
+jQuery('option').filter(function(){
+    return jQuery(this).text().trim() == "$value";
+}).prop('selected', true);
+JS;
+        $_script1 = <<<JS
+jQuery('li').filter(function(){
+    return jQuery(this).find('a span').text().trim() == "$value";
+}).click();
+JS;
+        $this->gui->executeScript($_script);
+        $this->gui->executeScript($_script1);
+    }
+
+    /**
      * @Given /^I wait Element has class "([^"]*)"$/
      */
     public function iWaitElementHasClass($arg1)
     {
         try{
-            $this->gui->wait(5000,'document.getElementsByClassName("'.$arg1.'").length > 0');
+            $this->gui->wait(10000,'document.getElementsByClassName("'.$arg1.'").length > 0');
         }catch(PendingException $e){
             throw $e;
         }

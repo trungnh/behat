@@ -3,7 +3,7 @@ Feature: Test Apply Now Form
 
   Scenario: Add a product to cart
     Given I view category name "Furniture"
-    When I add product name "Computer chair" to cart
+    When I add product name "4-PIECE QUEEN BED PACKAGE" to cart
     And I click Apply now button
     And I wait "1" seconds
     And I fill "6009" to "Postcode" field
@@ -17,12 +17,13 @@ Feature: Test Apply Now Form
     And I fill "trung@playhousedigital.com" to "Email address" field
     And I check on "Privacy Authorisation" field
     And I press on button "Next" field "next"
+    And I wait "5" seconds
     And I wait Element has class "residential-details-form"
     Then I should see the text "PERSONAL DETAILS" in ".residential-details-form h2"
     And I wait "1" seconds
-    And I select "Single" from "What’s your marital status?" dropdown
-    And I select "1" from "Years" of "How long have you been at your current address?" field
-    And I select "1" from "Months" of "How long have you been at your current address?" field
+    And I select "Single" from Marital dropdown
+    And I select "2" from "Years" of "How long have you been at your current address?" field
+    And I select "2" from "Months" of "How long have you been at your current address?" field
     And I fill "193 Coach Rd" to "Address" field
     And I fill "BENALLA" to "Suburb / Town" field
     And I select State "Victoria" dropdown
@@ -30,5 +31,26 @@ Feature: Test Apply Now Form
     And I select "Renting" from "Residential status" dropdown
     And I fill "Trung" to "Mortgagee / Landlord name" field
     And I fill "1234567890" to "Mortgagee / Landlord phone" field
+    And I wait "2" seconds
+    And I press on button "Next" field "next"
+    And I wait "5" seconds
+    And I wait Element has class "application-form income-and-identification-form"
+    And I choose Status "Employed Full Time"
+    And I wait "2" seconds
+    And I fill "Trung Nguyen" to "Employer Name" field
+    And I select Occupation "Labourer"
+    And I fill "193 Coach Rd" to "Address" field
+    And I fill "BENALLA" to "Suburb / Town" field
+    And I select State "Victoria" dropdown
+    And I fill "3672" to "Postcode" field
+    And I fill "1234567890" to "Employer Phone" field
+    And I fill "4000" to "Weekly net income" field
+    And I fill "1000" to "Other encumbrances" field
+    And I select "2" from "Number of dependants" dropdown
+    And I select "Birth Certificate" from "Identification type" dropdown
+    And I fill "1234567" to "ID number" field
+    And I select Expiry date "Year" value "2015"
+    And I select Expiry date "Month" value "January"
+    And I wait "2" seconds
     And I press on button "Next" field "next"
     #Then I should see "THANK YOU" in "#successPopup h3"
