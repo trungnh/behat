@@ -250,6 +250,12 @@ JS;
      */
     public function iSelectFromField($arg1, $arg2, $arg3)
     {
+        $_script = <<<JS
+jQuery('option').filter(function(){
+            return jQuery(this).text().trim() == "$arg1";
+        }).prop('selected', true);
+JS;
+        $this->gui->executeScript($_script);
         $this->iSelectFrom($arg1, $arg3);
     }
 

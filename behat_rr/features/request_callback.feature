@@ -3,7 +3,7 @@ Feature: Test Request Callback Form
 
   Scenario: Add a product to cart
     Given I view category name "Furniture"
-    When I add product name "Computer chair" to cart
+    When I add product name "4-PIECE QUEEN BED PACKAGE" to cart
     And I click on button has id "#requestCallbackForm"
     And I wait "1" seconds
     And I fill "6009" to "Postcode" field "applicationForm_callbackRequest-postCode"
