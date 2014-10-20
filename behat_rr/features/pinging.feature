@@ -1,5 +1,5 @@
 # features/pinging.feature
-Feature: Test Pinging Application Form
+Feature: pinging
 
   Scenario: Add a product to cart
     Given I view category name "Furniture"

@@ -1,7 +1,7 @@
 # features/apply_now.feature
-Feature: apply_now
+Feature: apply_now_previous_residential
 
-  Scenario: Add a product to cart
+  Scenario: Test Apply Now Form included Previous Residential
     Given I view category name "Furniture"
     When I add product name "4-PIECE QUEEN BED PACKAGE" to cart
     And I click Apply now button
@@ -26,8 +26,11 @@ Feature: apply_now
 
     #Step 2
     And I select "Single" from Marital dropdown
-    And I select "2" from "Years" of "How long have you been at your current address?" field
-    And I select "2" from "Months" of "How long have you been at your current address?" field
+    And I select "1" from "Years" of "How long have you been at your current address?" field
+    And I select "1" from "Months" of "How long have you been at your current address?" field
+    And I wait "1" seconds
+    And I wait residential details form "residential-details"
+    And I wait "2" seconds
     And I fill "193 Coach Rd" to "Address" field
     And I fill "BENALLA" to "Suburb / Town" field
     And I select State "Victoria" dropdown
@@ -35,13 +38,19 @@ Feature: apply_now
     And I select "Renting" from "Residential status" dropdown
     And I fill "Trung" to "Mortgagee / Landlord name" field
     And I fill "1234567890" to "Mortgagee / Landlord phone" field
+    And I fill "193 Coach Rd" to "Address" field in Previous form
+    And I fill "BENALLA" to "Suburb / Town" field in Previous form
+    And I select "Victoria" from dropdown "State" in Previous form
+    And I fill "3672" to "Postcode" field in Previous form
+    And I select "1" from dropdown "Years" in Previous form
+    And I select "2" from dropdown "Months" in Previous form
     And I wait "2" seconds
     And I press on button "Next" field "next"
     And I wait Element has class "income-and-identification-form"
     And I wait "5" seconds
     Then I should see the text "INCOME & IDENTIFICATION" in ".income-and-identification-form h2"
 
-    #Step 4
+    #Step 3
     And I choose Status "Employed Full Time"
     And I wait "5" seconds
     And I fill "Trung Nguyen" to "Employer Name" field
@@ -65,6 +74,8 @@ Feature: apply_now
     And I wait Element has class "referees"
     And I wait "5" seconds
     Then I should see the text "REFEREES (FAMILY & FRIENDS)" in ".referees h2"
+
+    #Step 4
     And I select "Mr." from "Title" dropdown
     And I fill "Long" to "First name" field
     And I fill "Pham" to "Last name" field

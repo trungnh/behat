@@ -315,7 +315,7 @@ jQuery('li').each(function(){
     var a = jQuery(this).find('label').text();
     var b = a.split('*')[0].trim();
     if(b == "$arg2"){
-        jQuery(this).find('input').val('$arg1');
+        jQuery(this).find('input').val("$arg1");
     }
 });
 JS;
@@ -421,7 +421,7 @@ JS;
 jQuery('.select-opener').parent().click();
 jQuery('label').filter(function(){
     return jQuery(this).find('a span').text().trim() == "State*:";
-}).next().find('.center').html("Victoria");
+}).next().find('.center').html("$value");
 JS;
             $this->gui->executeScript($_script);
             $this->iWaitSeconds(1);
@@ -607,6 +607,55 @@ jQuery('li').filter(function(){
 JS;
         $this->gui->executeScript($_script);
         $this->gui->executeScript($_script1);
+    }
+
+    /**
+     * @Given /^I wait residential details form "([^"]*)"$/
+     */
+    public function iWaitResidentialDetailsForm($arg1)
+    {
+        $_script = <<<JS
+jQuery(".$arg1").show();
+JS;
+        $this->gui->executeScript($_script);
+    }
+
+    /**
+     * @Given /^I fill "([^"]*)" to "([^"]*)" field in Previous form$/
+     */
+    public function iFillToFieldInPreviousForm($value, $element)
+    {
+        try{
+            $_script = <<<JS
+jQuery('#fieldset-1 li').each(function(){
+    var a = jQuery(this).find('label').text();
+    var b = a.split('*')[0].trim();
+    if(b == "$element"){
+        jQuery(this).find('input').val("$value");
+    }
+});
+JS;
+            $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
+    }
+
+    /**
+     * @Given /^I select "([^"]*)" from dropdown "([^"]*)" in Previous form$/
+     */
+    public function iSelectFromDropdownInPreviousForm($value)
+    {
+        try{
+            $_script = <<<JS
+jQuery('#fieldset-1 option').filter(function(){
+    return jQuery(this).text().trim() == "$value";
+}).prop('selected', true).parent().prev().find('.center').val("$value");
+JS;
+            $this->gui->executeScript($_script);
+        }catch(PendingException $e){
+            throw $e;
+        }
     }
 
     /**

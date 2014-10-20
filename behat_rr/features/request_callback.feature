@@ -1,5 +1,5 @@
 # features/request_callback.feature
-Feature: Test Request Callback Form
+Feature: request_callback
 
   Scenario: Add a product to cart
     Given I view category name "Furniture"
