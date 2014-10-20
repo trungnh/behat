@@ -284,6 +284,13 @@ jQuery('.phone-group').find('li').each(function(){
         jQuery(this).find('input').val('$arg1');
     }
 });
+jQuery('.phone').find('li').each(function(){
+    var a = jQuery(this).find('label').text();
+    var b = a.split(':')[0].trim();
+    if(b == "$arg2"){
+        jQuery(this).find('input').val('$arg1');
+    }
+});
 JS;
             $this->gui->executeScript($_script);
         }catch(PendingException $e){
@@ -327,6 +334,9 @@ jQuery('li').each(function(){
         jQuery(this).click();
     }
 });
+jQuery('option').filter(function(){
+    return jQuery(this).text().trim() == "$value";
+}).prop('selected', true);
 JS;
             $this->gui->executeScript($_script);
         }catch(PendingException $e){

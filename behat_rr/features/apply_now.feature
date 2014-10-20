@@ -33,17 +33,20 @@ Feature: Test Apply Now Form
     And I fill "1234567890" to "Mortgagee / Landlord phone" field
     And I wait "2" seconds
     And I press on button "Next" field "next"
+    And I wait Element has class "income-and-identification-form"
     And I wait "5" seconds
-    And I wait Element has class "application-form income-and-identification-form"
+    Then I should see the text "INCOME & IDENTIFICATION" in ".income-and-identification-form h2"
     And I choose Status "Employed Full Time"
-    And I wait "2" seconds
+    And I wait "5" seconds
     And I fill "Trung Nguyen" to "Employer Name" field
     And I select Occupation "Labourer"
     And I fill "193 Coach Rd" to "Address" field
-    And I fill "BENALLA" to "Suburb / Town" field
+    And I fill "BENALLA" to "Suburb/Town" field
     And I select State "Victoria" dropdown
     And I fill "3672" to "Postcode" field
     And I fill "1234567890" to "Employer Phone" field
+    And I select "2" from "Years" field
+    And I select "2" from "Month" field
     And I fill "4000" to "Weekly net income" field
     And I fill "1000" to "Other encumbrances" field
     And I select "2" from "Number of dependants" dropdown
@@ -53,4 +56,19 @@ Feature: Test Apply Now Form
     And I select Expiry date "Month" value "January"
     And I wait "2" seconds
     And I press on button "Next" field "next"
-    #Then I should see "THANK YOU" in "#successPopup h3"
+    And I wait Element has class "referees"
+    And I wait "5" seconds
+    Then I should see the text "REFEREES (FAMILY & FRIENDS)" in ".referees h2"
+    And I select "Mr." from "Title" dropdown
+    And I fill "Long" to "First name" field
+    And I fill "Pham" to "Last name" field
+    And I fill "193 Coach Rd" to "Address" field
+    And I fill "BENALLA" to "Suburb/Town" field
+    And I select State "Victoria" dropdown
+    And I fill "3672" to "Postcode" field
+    And I fill phone "1234567890" to "Mobile" field
+    And I fill "long@playhousedigital.com" to "Email address" field
+    And I select "Employer" from "Relationship" dropdown
+    And I press on button "Submit My Application" field "submitApplicationForm"
+    And I wait "5" seconds
+    Then I should see "THANK YOU" in "#successPopup h3"
